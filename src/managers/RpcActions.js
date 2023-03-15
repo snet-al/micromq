@@ -9,12 +9,16 @@ class RpcActions {
 
   async handle(req, res) {
     const { action, meta } = req.server;
-    const handler = this._actions.get(action);
+    let handler = this._actions.get(action);
 
     if (!handler) {
-      console.warn(`Action "${action}" not found`, message);
-
-      return;
+      console.warn(`Action "${action}" not found`);
+      // console.log('action not found')
+      handler = (meta, res) => {
+        res.json({status: 'error'})
+      }
+      // throw new Error('not found');
+      // return
     }
 
     await handler(meta, res);
